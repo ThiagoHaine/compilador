@@ -15,7 +15,7 @@ class Simbolo:
         self.coluna = coluna
 
     def __str__(self):
-        return "[{}, {}, ({}, {})]".format(self.id, self.posicao, self.linha, self.coluna)
+        return "[{}, {}, ({}, {})]".format(self.id, "" if self.posicao==None else self.posicao, self.linha, self.coluna)
 
 class Dicionario:
     def __init__(self):
