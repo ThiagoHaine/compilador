@@ -43,7 +43,7 @@ class Dicionario:
 
     def token(self,txt):
         for item in self.lista:
-            if item.funcao==txt or (txt.isnumeric() and int(txt)==item.id):
+            if item.funcao==txt:
                 return item
         return Token("",0)
 

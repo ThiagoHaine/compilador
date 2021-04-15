@@ -1,0 +1,3 @@
+1000 rem Encontrar o maior de dois inteiros
+1100 input x
+1200 let u = j - 36 + 5 - x + 9
