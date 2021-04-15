@@ -5,8 +5,9 @@
 40 input b
 45 rem
 50 rem soma os inteiros e armazena o resultado em c
-60 let c = a + b
-65 rem
+60 leta c = a + b
+62 let d = 50
+65 goto 10
 70 rem imprime o resultado
 80 print c
 90 rem termina a execução do programa

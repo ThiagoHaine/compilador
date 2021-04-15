@@ -1,15 +1,16 @@
 from classes import Simbolo
 
 class Compilador_Sintatico:
-    def __init__(self, resultado_lexico):
+    def __init__(self, resultado_lexico, memoria):
         self._resultado_lexico = resultado_lexico
         self._erros = []
+        self._memoria = memoria
         self._token = 0
 
     def _atrib(self):
         self.next_token()
         if self._token.id!=11:
-            self.erro("Erro: = esperado em {},{}",self._token)
+            self.erro("Erro: Símbolo da igualdade esperado em {},{}",self._token)
             
     def _var(self):
         self.next_token()
@@ -25,6 +26,13 @@ class Compilador_Sintatico:
         self.next_token()
         if self._token.id!=51:
             self.erro("Erro: Constante numérica esperada em {},{}",self._token)
+
+    def _rotulo(self):
+        self.next_token()
+        if self._token.id!=51:
+            self.erro("Erro: Constante numérica esperada em {},{}",self._token)
+        elif not str(self._token.numero) in self._memoria:
+            self.erro("Erro: Rótulo não definido em {},{}",self._token)
 
     def _operador(self):
         self.next_token()
@@ -68,7 +76,7 @@ class Compilador_Sintatico:
                 self._num_or_var()
                 self._lf()
             elif (self._token.id==65):
-                self._num()
+                self._rotulo()
                 self._lf()
             elif (self._token.id==66):
                 self._num_or_var()
@@ -96,5 +104,5 @@ class Compilador_Sintatico:
         if len(self._resultado_lexico)!=0:
             self.processa()
 
-    def getErros(self):
+    def get_erros(self):
         return self._erros

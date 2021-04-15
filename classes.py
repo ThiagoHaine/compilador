@@ -4,11 +4,12 @@ class Token:
         self.id = id
 
 class Simbolo:
-    def __init__(self,id,posicao,linha,coluna):
+    def __init__(self,id,posicao,linha,coluna,numero):
         self.id = id
         self.posicao = posicao
         self.linha = linha
         self.coluna = coluna
+        self.numero = numero
 
     def __str__(self):
         return "[{}, {}, ({}, {})]".format(self.id, "" if self.posicao==None else self.posicao, self.linha, self.coluna)

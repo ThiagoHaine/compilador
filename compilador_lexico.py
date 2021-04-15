@@ -6,7 +6,7 @@ class Compilador_Lexico:
     def __init__(self,dicionario):
         self._memoria = []
         self._resultado = []
-        self.erros = []
+        self._erros = []
         self._numero_linha = 0
         self._dicionario = dicionario
 
@@ -23,6 +23,12 @@ class Compilador_Lexico:
 
     def resultado(self):
         return self._resultado
+
+    def memoria(self):
+        return self._memoria
+
+    def get_erros(self):
+        return self._erros
 
     def processa(self):
         linhas = self.arquivo.read().split('\n') #Lê o arquivo e transforma em uma array com as quebras de linha
@@ -42,7 +48,7 @@ class Compilador_Lexico:
                 #Checa se tem uma letra em um comando numérico
                 if buffer!="" and c!=" " and buffer[0].isnumeric() and not comentario:
                     if not c.isnumeric():
-                        self.erros.append("Caractér não identificado na linha {}, coluna {}".format(linha,coluna))
+                        self._erros.append("Caractér não identificado na linha {}, coluna {}".format(linha,coluna))
                         continue
 
                 if not comentario:
@@ -50,41 +56,41 @@ class Compilador_Lexico:
                         buffer += c
                     else:
                         if not buffer.isnumeric() and match("[a-z]*[A-Z]+[a-z]*",buffer)!=None:
-                            self.erros.append("Erro Léxico: Letra maíuscula encontrada na linha {}".format(linha))
+                            self._erros.append("Erro Léxico: Letra maíuscula encontrada na linha {}".format(linha))
                         elif len(buffer)==coluna-1:
                             if not buffer.isnumeric():
-                                self.erros.append("Número da linha {} não definido".format(linha))
+                                self._erros.append("Número da linha {} não definido".format(linha))
                             else:
                                 if self._numero_linha > int(buffer):
-                                    self.erros.append("Id da linha {} é maior do que o anterior".format(linha))
+                                    self._erros.append("Erro Semântico: Rótulo da linha {} é menor do que o anterior".format(linha))
 
                                 self._numero_linha = int(buffer)
                                 
                                 indice = adiciona_se_nao_existe(self._memoria, buffer)
-                                self._resultado.append(Simbolo(51, indice, linha, coluna-len(buffer)))
+                                self._resultado.append(Simbolo(51, indice, linha, coluna-len(buffer), int(buffer)))
                         else:
                             t = self._dicionario.token(buffer)
 
                             if t.id==0:
                                 if buffer.isnumeric():
-                                    self._resultado.append(Simbolo(51, None, linha, coluna-len(buffer)))
+                                    self._resultado.append(Simbolo(51, None, linha, coluna-len(buffer), int(buffer)))
                                 else:
                                     if len(buffer)!=1:
-                                        self.erros.append("Variável com mais de 1 caracter na linha {}, coluna {}".format(linha,coluna))
+                                        self._erros.append("Variável com mais de 1 caracter na linha {}, coluna {}".format(linha,coluna))
 
                                     indice = adiciona_se_nao_existe(self._memoria, buffer)
-                                    self._resultado.append(Simbolo(41, indice, linha, coluna-len(buffer)))
+                                    self._resultado.append(Simbolo(41, indice, linha, coluna-len(buffer), None))
                             else:
-                                self._resultado.append(Simbolo(t.id, None, linha, coluna-len(buffer)))
+                                self._resultado.append(Simbolo(t.id, None, linha, coluna-len(buffer), None))
                                 if t.id==61:
                                     comentario=True
                         buffer = ""
 
                 if coluna==len(conteudo):
                     if linha==len(linhas):
-                        self._resultado.append(Simbolo(3, None, linha, coluna))
+                        self._resultado.append(Simbolo(3, None, linha, coluna, None))
                     else:
-                        self._resultado.append(Simbolo(10, None, linha, coluna))
+                        self._resultado.append(Simbolo(10, None, linha, coluna, None))
 
 
             
